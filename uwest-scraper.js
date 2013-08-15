@@ -1,3 +1,11 @@
+var args = require('system').args;
+if (args.length < 2) {
+  console.log("Usage: phantomjs uwest-scraper.js <termCode> <course>");
+  phantom.exit();
+} else {
+  var termCode = args[1];
+  var course = args[2];
+}
 var page = require('webpage').create();
 var step = 1;
 page.settings.loadImages = false;
@@ -6,20 +14,19 @@ page.open('https://myportal.uwest.edu/Common/CourseSchedule.aspx', function() {
     if (step === 1) {
       step = 2;
       page.injectJs("click.js");
+      page.render("out.png");
       page.evaluate(function() {
         clickElement($("td[class='link1'] > a")[0]);
       });
     } else {
       var info = page.evaluate(function() {
         return {
-          name: $("span[id$='lbClassDesc']").text(),
-          course: $("span[id$='lbCode']").text(),
-          seats: $("span[id$='lbSeatsAvail']").text()
+          name: $("span[id$='lbClassDesc']").text().trim(),
+          course: $("span[id$='lbCode']").text().trim(),
+          seats: $("span[id$='lbSeatsAvail']").text().trim()
         };
       });
-      console.log("Name: "+info.name);
-      console.log("Course: "+info.course);
-      console.log("Seats: "+info.seats);
+      console.log(JSON.stringify(info));
       phantom.exit();
     }
   };
@@ -27,10 +34,10 @@ page.open('https://myportal.uwest.edu/Common/CourseSchedule.aspx', function() {
     console.log(msg);
   };
   page.injectJs("click.js");
-  page.evaluate(function() {
-    $("select[name$='cbTerm']").val("162")
-    $("input[name$='txtCode']").val("ENGL101");
+  page.evaluate(function(termCode, course) {
+    $("select[name$='cbTerm']").val(termCode)
+    $("input[name$='txtCode']").val(course);
     clickElement($("a[id$='btnSearch']")[0]);
     return true;
-  });
+  }, termCode, course);
 });
