@@ -6,7 +6,6 @@ class UwestScheduleScraper
     script = File.expand_path("uwest-scraper.js")
     output = JSON.parse(Phantomjs.run(script, term, course))
     seats = output["seats"].to_i
-    debugger
     return (seats > 0 ? :open : :closed)
   end
 end
