@@ -21,7 +21,7 @@ class UwestScheduleScraper
   private
 
   def get_info(term, course)
-    script = File.expand_path("uwest-scraper.js")
+    script = File.expand_path("../../uwest-scraper.js", __FILE__)
     info = JSON.parse(Phantomjs.run(script, term, course))
     if info["course"]
       return info
