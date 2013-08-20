@@ -30,7 +30,6 @@ page.open('https://myportal.uwest.edu/Common/CourseSchedule.aspx', function() {
     if (step === 1) {
       step = 2;
       page.injectJs("click.js");
-      page.render("out.png");
       var exit = page.evaluate(function() {
         var element = $("td[class='link1'] > a")[0];
         if (element) {
@@ -67,6 +66,7 @@ page.open('https://myportal.uwest.edu/Common/CourseSchedule.aspx', function() {
   page.evaluate(function(termCode, course) {
     $("select[name$='cbTerm']").val(termCode)
     $("input[name$='txtCode']").val(course);
+    $("input[value='rbOC']").attr("checked", "checked");
     clickElement($("a[id$='btnSearch']")[0]);
     return true;
   }, termCode, course);
