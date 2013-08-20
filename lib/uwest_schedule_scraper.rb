@@ -1,5 +1,6 @@
 require 'json'
 require 'phantomjs'
+require 'uwest_class_info'
 
 class UwestScheduleScraper
   def get_class_status(term, course)
@@ -10,6 +11,11 @@ class UwestScheduleScraper
     else
       return nil
     end
+  end
+
+  def get_class_info(term, course)
+    info = get_info(term, course)
+    UwestClassInfo.new(info["name"], nil)
   end
 
   private
