@@ -30,4 +30,7 @@ describe UwestScheduleScraper, '#get_class_info' do
     scraper.get_class_status('162', 'REL633', '').should eq(nil)
     scraper.get_class_info('162', 'REL633', '').should eq(nil)
   end
+  it "blows up with not enough params" do
+    expect { scraper.get_class_info("162", "ENGL101") }.to raise_error(ArgumentError)
+  end
 end
