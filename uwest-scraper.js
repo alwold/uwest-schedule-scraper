@@ -6,7 +6,7 @@ phantom.onError = function(msg, trace) {
   phantom.exit(1);
 };
 var args = require('system').args;
-if (args.length < 2) {
+if (args.length < 3) {
   console.log(JSON.stringify({
     error: "Usage: phantomjs uwest-scraper.js <termCode> <course>"
   }));
@@ -14,6 +14,7 @@ if (args.length < 2) {
 } else {
   var termCode = args[1];
   var course = args[2];
+  var section = args[3];
 }
 var page = require('webpage').create();
 page.onError = function(msg, trace) {
@@ -30,20 +31,32 @@ page.open('https://myportal.uwest.edu/Common/CourseSchedule.aspx', function() {
     if (step === 1) {
       step = 2;
       page.injectJs("click.js");
-      var exit = page.evaluate(function() {
-        var element = $("td[class='link1'] > a")[0];
-        if (element) {
-          clickElement(element);
-          return false;
-        } else {
+      var exit = page.evaluate(function(course, section) {
+        var table = $("table[id$='CourseList']");
+        var rows = $("tr[class^='row']");
+        var found = false;
+        rows.each(function(index, row) {
+          var thisCourse = $("span[id$='lblCourseCode']", row).text().trim();
+          var thisSection = $("td", row)[3].innerHTML.replace("&nbsp;", "").trim();
+          if (thisCourse === course && thisSection === section) {
+            var link = $("td[class='link1'] > a", row)[0];
+            if (link) {
+              clickElement(link);
+              found = true;
+            }
+          }
+        });
+        if (!found) {
           console.log(JSON.stringify({
             name: null,
             course: null,
             seats: null
           }));
           return true;
+        } else {
+          return false;
         }
-      });
+      }, course, section);
       if (exit) {
         phantom.exit();
       }
