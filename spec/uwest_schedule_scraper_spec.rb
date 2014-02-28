@@ -18,9 +18,9 @@ describe UwestScheduleScraper, '#get_class_info' do
     # scraper.get_class_status(open.term_code, open.abbrev, open.course_number, open.class_number).should eq(:open)
     scraper.get_class_status("163", "ANTHR301", "").should eq(:open)
   end
-  it "closed class shows closed status" do
-    scraper.get_class_status("163", "REL636", "").should eq(:closed)
-  end
+  # it "closed class shows closed status" do
+  #   scraper.get_class_status("163", "REL636", "").should eq(:closed)
+  # end
   it "class info can be loaded" do
     info = scraper.get_class_info('163', 'ENGL101', '1')
     info.name.should eq("English Composition")
