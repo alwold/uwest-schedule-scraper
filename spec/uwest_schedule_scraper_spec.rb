@@ -22,8 +22,8 @@ describe UwestScheduleScraper, '#get_class_info' do
   #   scraper.get_class_status("163", "REL636", "").should eq(:closed)
   # end
   it "class info can be loaded" do
-    info = scraper.get_class_info('163', 'ENGL101', '1')
-    info.name.should eq("English Composition")
+    info = scraper.get_class_info('166', 'SPCH101', '1')
+    info.name.should eq("Oral Communication")
     # info.schedule.should eq("TR 10:00 AM - 11:50 AM")
   end
   it "returns nil for non-existent class" do
